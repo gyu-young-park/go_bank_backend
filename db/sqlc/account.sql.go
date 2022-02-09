@@ -20,7 +20,7 @@ INSERT INTO accounts (
 type CreateAccountParams struct {
 	Owner    string `json:"owner"`
 	Balance  int64  `json:"balance"`
-	Currency string `json:"currency"`
+	Currency string `json:"curr	ency"`
 }
 
 func (q *Queries) CreateAccount(ctx context.Context, arg CreateAccountParams) (Account, error) {
