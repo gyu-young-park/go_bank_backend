@@ -55,7 +55,6 @@ type TransferTxResult struct {
 func (store *Store) TransferTx(ctx context.Context, arg TransferTxParams) (TransferTxResult, error) {
 	var result TransferTxResult
 	err := store.execTx(ctx, func(q *Queries) error {
-		fmt.Println("start")
 		//query
 		var err error
 
@@ -66,7 +65,6 @@ func (store *Store) TransferTx(ctx context.Context, arg TransferTxParams) (Trans
 		})
 
 		if err != nil {
-			fmt.Print("hello trans")
 			return err
 		}
 
@@ -76,7 +74,6 @@ func (store *Store) TransferTx(ctx context.Context, arg TransferTxParams) (Trans
 		})
 
 		if err != nil {
-			fmt.Print("hello from")
 			return err
 		}
 
@@ -86,12 +83,28 @@ func (store *Store) TransferTx(ctx context.Context, arg TransferTxParams) (Trans
 		})
 
 		if err != nil {
-			fmt.Print("hello to")
 			return err
 		}
-		fmt.Print("hello ssss")
-		//todo: update account infomation
-		return nil
+
+		result.FromAccount, err = q.AddAccountBalance(ctx, AddAccountBalanceParams{
+			Amount: -arg.Amount,
+			ID:     arg.FromAccountID,
+		})
+
+		if err != nil {
+			return err
+		}
+
+		result.ToAccount, err = q.AddAccountBalance(ctx, AddAccountBalanceParams{
+			Amount: arg.Amount,
+			ID:     arg.ToAccountID,
+		})
+
+		if err != nil {
+			return err
+		}
+
+		return err
 	})
 	return result, err
 }
