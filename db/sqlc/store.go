@@ -6,21 +6,26 @@ import (
 	"fmt"
 )
 
+type Store interface {
+	Querier
+	TransferTx(ctx context.Context, arg TransferTxParams) (TransferTxResult, error)
+}
+
 // store는 쿼리와 트랜잭션 실행에 필요한 모든 함수를 제공한다.
-type Store struct {
+type SQLStore struct {
 	*Queries
 	db *sql.DB
 }
 
-func NewStore(db *sql.DB) *Store {
-	return &Store{
+func NewStore(db *sql.DB) Store {
+	return &SQLStore{
 		db:      db,
 		Queries: New(db),
 	}
 }
 
 // callback 함수에서 실행하도록 한다.
-func (store *Store) execTx(ctx context.Context, fn func(*Queries) error) error {
+func (store *SQLStore) execTx(ctx context.Context, fn func(*Queries) error) error {
 	tx, err := store.db.BeginTx(ctx, nil)
 	if err != nil {
 		return err
@@ -52,7 +57,7 @@ type TransferTxResult struct {
 }
 
 // 돈을 보낼 때에는 transfer을 하고, from ,to에게 돈을 보낸 entry 기록, 그리고 계정을 업데이트해줘야 한다.
-func (store *Store) TransferTx(ctx context.Context, arg TransferTxParams) (TransferTxResult, error) {
+func (store *SQLStore) TransferTx(ctx context.Context, arg TransferTxParams) (TransferTxResult, error) {
 	var result TransferTxResult
 	err := store.execTx(ctx, func(q *Queries) error {
 		//query

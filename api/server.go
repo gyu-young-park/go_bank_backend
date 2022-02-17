@@ -7,11 +7,11 @@ import (
 
 //Server serves HTTP requests for out banking service.
 type Server struct {
-	store  *db.Store
+	store  db.Store
 	router *gin.Engine
 }
 
-func NewServer(store *db.Store) *Server {
+func NewServer(store db.Store) *Server {
 	server := &Server{store: store}
 	router := gin.Default()
 	//HandleFunc을 여러개를 넣을 수 있는데 마지막이 진짜 핸들러고 중간은 미들웨어이다.
