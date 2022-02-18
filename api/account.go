@@ -11,7 +11,7 @@ import (
 // CreateAccountParams와 같다. 단, 잔액은 처음부터 0이다. "binding:required"가 있어야 validation이 된다. oneof를 통해 이 중에 하나의 값인지를 체크한다.
 type createAccountRequest struct {
 	Owner    string `json:"owner" binding:"required"`
-	Currency string `json:"currency" binding:"required,oneof=USD EUR WON"`
+	Currency string `json:"currency" binding:"required,currency"`
 }
 
 // gin은 git.Context를 통해서 input parameter를 받을 수 있고, 응답을 전송할 수 있다.
