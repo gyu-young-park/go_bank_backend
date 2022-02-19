@@ -81,7 +81,7 @@ func TestGetAccountAPI(t *testing.T) {
 			defer mockController.Finish()
 
 			store := mockdb.NewMockStore(mockController)
-			// build stub
+			// build stub₩
 			tc.buildStubs(store)
 
 			//start test server and send request

@@ -6,6 +6,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	db "github.com/gyu-young-park/simplebank/db/sqlc"
+	"github.com/lib/pq"
 )
 
 // CreateAccountParams와 같다. 단, 잔액은 처음부터 0이다. "binding:required"가 있어야 validation이 된다. oneof를 통해 이 중에 하나의 값인지를 체크한다.
@@ -29,9 +30,16 @@ func (server *Server) createAccount(ctx *gin.Context) {
 
 	account, err := server.store.CreateAccount(ctx, arg)
 	if err != nil {
+		if pqErr, ok := err.(*pq.Error); ok {
+			switch pqErr.Code.Name() {
+			case "foreign_key_violation", "unique_violation":
+				ctx.JSON(http.StatusForbidden, errorResponse(err))
+				return
+			}
+		}
 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
 	}
-
 	ctx.JSON(http.StatusOK, account)
 }
 
