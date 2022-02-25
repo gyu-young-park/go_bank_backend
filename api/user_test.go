@@ -193,7 +193,7 @@ func TestCreateUserAPI(t *testing.T) {
 			tc.buildStubs(store)
 
 			//start test server and send request
-			server := NewServer(store)
+			server := newTestServer(t, store)
 			recorder := httptest.NewRecorder() // 진짜로 http server를 실행할 필요가 없으니 recorder만 넣는다.
 
 			data, err := json.Marshal(tc.body)
