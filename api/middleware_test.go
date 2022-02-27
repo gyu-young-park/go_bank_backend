@@ -18,8 +18,8 @@ type authorizationTestSet struct {
 	checkResponse func(t *testing.T, recorder *httptest.ResponseRecorder)
 }
 
-func addAuthorization(t *testing.T, request *http.Request, tokenMake token.TokenMaker, authorizationType string, username string, duration time.Duration) {
-	token, err := tokenMake.CreateToken(username, duration)
+func addAuthorization(t *testing.T, request *http.Request, tokenMaker token.TokenMaker, authorizationType string, username string, duration time.Duration) {
+	token, err := tokenMaker.CreateToken(username, duration)
 	require.NoError(t, err)
 
 	authorizationHeader := fmt.Sprintf("%s %s", authorizationType, token)
