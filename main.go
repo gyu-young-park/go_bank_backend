@@ -11,6 +11,7 @@ import (
 )
 
 func main() {
+	log.Println("Application Start")
 	config, err := util.LocalConfig(".")
 	if err != nil {
 		log.Fatal("cannot load config", err)
